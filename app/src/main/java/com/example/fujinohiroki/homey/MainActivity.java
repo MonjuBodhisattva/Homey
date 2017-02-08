@@ -1,18 +1,12 @@
 package com.example.fujinohiroki.homey;
 
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     int i = 0;
     EditText editText;
     Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,19 +42,17 @@ public class MainActivity extends AppCompatActivity {
                 String text = editText.getText().toString();
                 // 入力した文字列の削除
                 editText.getEditableText().clear();
-                if(i==0) {
+                if (i == 0) {
                     // 取得したテキストを TextView に張り付ける
                     textView.setText(text);
                     textView2.setText("Hello");
-                }else if(i==1) {
+                } else if (i == 1) {
                     textView3.setText(text);
                     textView4.setText("Goodbye");
-                }
-                else if(i==2){
+                } else if (i == 2) {
                     textView5.setText(text);
                     textView6.setText("Nice to meet you");
-                }
-                else{
+                } else {
                 }
                 i++;
             }
