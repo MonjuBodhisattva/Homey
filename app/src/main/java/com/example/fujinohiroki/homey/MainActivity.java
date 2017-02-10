@@ -45,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
                 if (i == 0) {
                     // 取得したテキストを TextView に張り付ける
                     textView.setText(text);
-                    textView2.setText("Hello");
+                    textView2.setText("素敵ね");
                 } else if (i == 1) {
                     textView3.setText(text);
-                    textView4.setText("Goodbye");
+                    textView4.setText("そら助かるわ");
                 } else if (i == 2) {
                     textView5.setText(text);
-                    textView6.setText("Nice to meet you");
+                    textView6.setText("いいね！グッジョブ！");
                 } else {
                 }
                 i++;
