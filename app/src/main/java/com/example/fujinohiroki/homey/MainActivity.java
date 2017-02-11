@@ -1,5 +1,6 @@
 package com.example.fujinohiroki.homey;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,13 +14,6 @@ import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView textView;
-    TextView textView2;
-    TextView textView3;
-    TextView textView4;
-    TextView textView5;
-    TextView textView6;
-    int i = 0;
     EditText editText;
     Button button;
 
@@ -30,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("", "onCreate()");
 
         // Realmインスタンスの初期化
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
+        Realm.init(this);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
         Realm realm = Realm.getInstance(realmConfig);
 
         editText = (EditText) findViewById(R.id.edit_text);
