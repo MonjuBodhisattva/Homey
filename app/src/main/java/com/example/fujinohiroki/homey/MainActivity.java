@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView textView;
@@ -26,12 +29,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("", "onCreate()");
 
-        textView = (TextView) findViewById(R.id.textView);
-        textView2 = (TextView) findViewById(R.id.textView2);
-        textView3 = (TextView) findViewById(R.id.textView3);
-        textView4 = (TextView) findViewById(R.id.textView4);
-        textView5 = (TextView) findViewById(R.id.textView5);
-        textView6 = (TextView) findViewById(R.id.textView6);
+        // Realmインスタンスの初期化
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
+        Realm realm = Realm.getInstance(realmConfig);
+
         editText = (EditText) findViewById(R.id.edit_text);
         button = (Button) findViewById(R.id.button);
 
@@ -42,19 +43,6 @@ public class MainActivity extends AppCompatActivity {
                 String text = editText.getText().toString();
                 // 入力した文字列の削除
                 editText.getEditableText().clear();
-                if (i == 0) {
-                    // 取得したテキストを TextView に張り付ける
-                    textView.setText(text);
-                    textView2.setText("Hello");
-                } else if (i == 1) {
-                    textView3.setText(text);
-                    textView4.setText("Goodbye");
-                } else if (i == 2) {
-                    textView5.setText(text);
-                    textView6.setText("Nice to meet you");
-                } else {
-                }
-                i++;
             }
         });
     }
