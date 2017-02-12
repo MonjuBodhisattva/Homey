@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -16,12 +17,15 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
+import static com.example.fujinohiroki.homey.R.id.button;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText userMessage;
     ListView chatListView;
     Realm realm;
     String botMessage;
+    int itemCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("", "onCreate()");
 
         chatListView = (ListView) findViewById(R.id.chatView);
-
         // Realmインスタンスの初期化
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
@@ -39,11 +42,14 @@ public class MainActivity extends AppCompatActivity {
         userMessage = (EditText) findViewById(R.id.user_message); // 送信メッセージの取得
 
         // メッセージを全て取得してListView上に出力する
-        RealmResults<ChatMessage> chatMessages =
+        final RealmResults<ChatMessage> chatMessages =
                 realm.where(ChatMessage.class).findAll();
         ChatMessageAdapter adapter =
                 new ChatMessageAdapter(this, chatMessages);
         chatListView.setAdapter(adapter);
+        itemCount = chatListView.getCount();
+        chatListView.setItemChecked(itemCount-1, true);
+        chatListView.setSelection(itemCount-1);
     }
 
     /**
@@ -60,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         userMessage.getEditableText().clear(); // 入力文字を削除
         // botから送信されるメッセージを永続化する
         saveBotMessage(true);
+        itemCount++;
+        chatListView.smoothScrollToPosition(chatListView.getCount()-1);
     }
 
     /**

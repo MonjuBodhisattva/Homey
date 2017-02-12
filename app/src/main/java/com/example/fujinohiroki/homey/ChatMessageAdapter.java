@@ -1,8 +1,11 @@
 package com.example.fujinohiroki.homey;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import io.realm.RealmBaseAdapter;
@@ -35,17 +38,27 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
 
+        int layoutResource = 0;
+        ChatMessage chatMessage = adapterData.get(position);
+        boolean isbot = chatMessage.getIsBot();
+        if(isbot) {
+            layoutResource = R.layout.bot_message;
+        } else {
+            layoutResource = R.layout.user_message;
+        }
         /**
          * convertViewはnullの場合は、contentViewを新規作成する
          * nullでない場合は, 使い回す
          * スクロールではみ出した場合に画面の外に出たcontentViewを使い回す
          */
         if(convertView == null) {
-            convertView = inflater.inflate(
-                    android.R.layout.simple_list_item_2, parent, false);
+            convertView = inflater.inflate(layoutResource, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.sender = (TextView) convertView.findViewById(android.R.id.text1);
-            viewHolder.message = (TextView) convertView.findViewById(android.R.id.text2);
+            if(isbot) {
+                viewHolder.message = (TextView) convertView.findViewById(R.id.bot_msg);
+            } else{
+                viewHolder.message = (TextView) convertView.findViewById(R.id.user_msg);
+            }
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -54,15 +67,8 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
         /**
          * realmResultsがadapterDataに変更されている
           */
-        ChatMessage chatMessage = adapterData.get(position);
+
         viewHolder.message.setText(chatMessage.getMessage());
-        boolean isbot = chatMessage.getIsBot();
-        // botかどうかで送信者を分ける
-        if(isbot) {
-            viewHolder.sender.setText("bot");
-        } else {
-            viewHolder.sender.setText("あなた");
-        }
 
         return convertView;
     }
