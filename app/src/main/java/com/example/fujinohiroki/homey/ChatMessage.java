@@ -16,4 +16,23 @@ public class ChatMessage extends RealmObject {
     private Date date;
     private boolean isBot;
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setBot(boolean isBot) {
+        this.isBot = isBot;
+    }
 }

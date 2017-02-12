@@ -8,12 +8,22 @@
     android:background="#EBF5FE"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context="com.example.fujinohiroki.homey.MainActivity">
+    tools:context="com.example.fujinohiroki.homey.MainActivity"
+    android:weightSum="1">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:id="@+id/listView" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1">
 
         <EditText
             android:id="@+id/edit_text"
@@ -40,7 +50,8 @@
             android:textSize="18sp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onSaveTapped" />
     </LinearLayout>
 
 </LinearLayout>

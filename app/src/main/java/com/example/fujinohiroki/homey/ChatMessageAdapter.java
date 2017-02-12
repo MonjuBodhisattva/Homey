@@ -40,10 +40,21 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
          * スクロールではみ出した場合に画面の外に出たcontentViewを使い回す
          */
         if(convertView == null) {
-
+            convertView = inflater.inflate(
+                    android.R.layout.simple_list_item_2, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.message = (TextView) convertView.findViewById(android.R.id.text1);
+            convertView.setTag(viewHolder);
         } else {
-
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        return null;
+
+        /**
+         * realmResultsがadapterDataに変更されている
+          */
+        ChatMessage chatMessage = adapterData.get(position);
+        viewHolder.message.setText(chatMessage.getMessage());
+
+        return convertView;
     }
 }
