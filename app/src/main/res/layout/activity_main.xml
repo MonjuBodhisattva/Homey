@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_gravity="center"
-        android:id="@+id/listView" />
+        android:id="@+id/chatView" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -26,7 +26,7 @@
         android:layout_weight="1">
 
         <EditText
-            android:id="@+id/edit_text"
+            android:id="@+id/user_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -51,7 +51,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
-            android:onClick="onSaveTapped" />
+            android:onClick="onSendMessage" />
     </LinearLayout>
 
 </LinearLayout>

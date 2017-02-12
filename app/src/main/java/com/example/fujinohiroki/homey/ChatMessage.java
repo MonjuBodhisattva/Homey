@@ -20,6 +20,10 @@ public class ChatMessage extends RealmObject {
         return message;
     }
 
+    public boolean getIsBot() {
+        return isBot;
+    }
+
     public void setId(long id) {
         this.id = id;
     }

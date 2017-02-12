@@ -16,6 +16,7 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
 
     private static class ViewHolder {
         TextView message;
+        TextView sender;
     }
 
     public ChatMessageAdapter(Context context,
@@ -43,7 +44,8 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
             convertView = inflater.inflate(
                     android.R.layout.simple_list_item_2, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.message = (TextView) convertView.findViewById(android.R.id.text1);
+            viewHolder.sender = (TextView) convertView.findViewById(android.R.id.text1);
+            viewHolder.message = (TextView) convertView.findViewById(android.R.id.text2);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -54,6 +56,13 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
           */
         ChatMessage chatMessage = adapterData.get(position);
         viewHolder.message.setText(chatMessage.getMessage());
+        boolean isbot = chatMessage.getIsBot();
+        // botかどうかで送信者を分ける
+        if(isbot) {
+            viewHolder.sender.setText("bot");
+        } else {
+            viewHolder.sender.setText("あなた");
+        }
 
         return convertView;
     }
