@@ -66,6 +66,10 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
         LinearLayout singleMessageContainer = (LinearLayout) convertView.findViewById(R.id.chatMessageContainer);
         convertView.setTag(viewHolder);
 
+        /**
+         * botのメッセージかどうかで左か右に振り分ける
+         * botの場合はimageを挿入する
+         */
         singleMessageContainer.setGravity(isbot? Gravity.LEFT : Gravity.RIGHT);
         viewHolder.message.setText(chatMessage.getMessage());
         viewHolder.icon.setImageResource(isbot? R.drawable.homeylogo : 0);

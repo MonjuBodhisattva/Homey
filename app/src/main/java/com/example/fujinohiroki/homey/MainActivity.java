@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("", "onCreate()");
 
+        // chatのlistView取得
         chatListView = (ListView) findViewById(R.id.chatView);
         // Realmインスタンスの初期化
         Realm.init(this);
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 new ChatMessageAdapter(this, chatMessages);
         chatListView.setAdapter(adapter);
         itemCount = chatListView.getCount();
+        // listViewを一番下にする
         chatListView.setItemChecked(itemCount-1, true);
         chatListView.setSelection(itemCount-1);
     }
@@ -64,10 +66,11 @@ public class MainActivity extends AppCompatActivity {
         saveBotMessage(false);
         Toast.makeText(this, "メッセージを送信しました", Toast.LENGTH_SHORT).show();
         userMessage.getEditableText().clear(); // 入力文字を削除
+        chatListView.smoothScrollToPosition(chatListView.getCount() - 1);
         // botから送信されるメッセージを永続化する
         saveBotMessage(true);
-        itemCount++;
-        chatListView.smoothScrollToPosition(chatListView.getCount()-1);
+        // listViewを下までスクロール
+        chatListView.smoothScrollToPosition(chatListView.getCount() - 1);
     }
 
     /**
