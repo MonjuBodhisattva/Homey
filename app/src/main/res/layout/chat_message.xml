@@ -6,7 +6,8 @@
     <LinearLayout
         android:id="@+id/chatMessageContainer"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:id="@+id/icon"
