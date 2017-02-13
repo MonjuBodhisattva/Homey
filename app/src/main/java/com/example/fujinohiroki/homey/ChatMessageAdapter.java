@@ -2,8 +2,10 @@ package com.example.fujinohiroki.homey;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
     private static class ViewHolder {
         TextView message;
         TextView sender;
+        ImageView icon;
     }
 
     public ChatMessageAdapter(Context context,
@@ -39,13 +42,13 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
         ViewHolder viewHolder;
 
         int layoutResource = 0;
+        /**
+         * realmResultsがadapterDataに変更されている
+         */
         ChatMessage chatMessage = adapterData.get(position);
         boolean isbot = chatMessage.getIsBot();
-        if(isbot) {
-            layoutResource = R.layout.bot_message;
-        } else {
-            layoutResource = R.layout.user_message;
-        }
+        layoutResource = R.layout.chat_message;
+
         /**
          * convertViewはnullの場合は、contentViewを新規作成する
          * nullでない場合は, 使い回す
@@ -54,21 +57,18 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
         if(convertView == null) {
             convertView = inflater.inflate(layoutResource, parent, false);
             viewHolder = new ViewHolder();
-            if(isbot) {
-                viewHolder.message = (TextView) convertView.findViewById(R.id.bot_msg);
-            } else{
-                viewHolder.message = (TextView) convertView.findViewById(R.id.user_msg);
-            }
-            convertView.setTag(viewHolder);
+            viewHolder.message = (TextView) convertView.findViewById(R.id.chatMessage);
+            viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        /**
-         * realmResultsがadapterDataに変更されている
-          */
+        LinearLayout singleMessageContainer = (LinearLayout) convertView.findViewById(R.id.chatMessageContainer);
+        convertView.setTag(viewHolder);
 
+        singleMessageContainer.setGravity(isbot? Gravity.LEFT : Gravity.RIGHT);
         viewHolder.message.setText(chatMessage.getMessage());
+        viewHolder.icon.setImageResource(isbot? R.drawable.homeylogo : 0);
 
         return convertView;
     }
