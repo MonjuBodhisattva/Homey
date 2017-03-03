@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Homey</string>
+    <string name="prompt_password" />
+    <string name="action_sign_in_short" />
+    <string name="prompt_email" />
+    <string name="action_sign_in" />
 </resources>
