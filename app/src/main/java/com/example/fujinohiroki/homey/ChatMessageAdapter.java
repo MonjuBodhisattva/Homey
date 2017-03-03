@@ -77,3 +77,5 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
         return convertView;
     }
 }
+
+
