@@ -3,4 +3,7 @@
     <color name="colorPrimary">#EBF5FE</color>
     <color name="colorPrimaryDark">#EBF5FE</color>
     <color name="colorAccent">#EBF5FE</color>
+    <item name="visible" type="id"/>
+    <item name="masked" type="id" />
+    <item type="integer" name="login" format="integer">100</item>
 </resources>
