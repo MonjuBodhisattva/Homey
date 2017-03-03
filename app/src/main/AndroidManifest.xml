@@ -29,6 +29,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".bot" />
+        <activity android:name=".signup"></activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
