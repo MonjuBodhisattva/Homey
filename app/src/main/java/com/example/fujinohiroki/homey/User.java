@@ -21,7 +21,7 @@ public class User extends RealmObject{
         return (int) id;
     }
 
-    public String getPass() {
+    public String getPassword() {
         return password;
     }
 
@@ -37,7 +37,7 @@ public class User extends RealmObject{
         this.id = id;
     }
 
-    public void setPass(String pass) {
+    public void setPassword(String pass) {
         this.password = pass;
     }
 
