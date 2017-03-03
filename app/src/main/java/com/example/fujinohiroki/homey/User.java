@@ -37,8 +37,8 @@ public class User extends RealmObject{
         this.id = id;
     }
 
-    public void setPassword(String pass) {
-        this.password = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setEmail(String email) {
