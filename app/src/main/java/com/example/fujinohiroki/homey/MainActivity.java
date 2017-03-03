@@ -6,18 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.Date;
 import java.util.Random;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-
-import static com.example.fujinohiroki.homey.R.id.button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,13 +48,14 @@ public class MainActivity extends AppCompatActivity {
         chatListView.setAdapter(adapter);
         itemCount = chatListView.getCount();
         // listViewを一番下にする
-        chatListView.setItemChecked(itemCount-1, true);
-        chatListView.setSelection(itemCount-1);
+        chatListView.setItemChecked(itemCount - 1, true);
+        chatListView.setSelection(itemCount - 1);
     }
 
     /**
      * メッセージを送信する
      * Realmオブジェクトを通してデータを永続化する
+     *
      * @param view
      */
     public void onSendMessage(View view) {
@@ -75,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * ボットが返すメッセージ今はランダムに生成を行う
+     *
      * @return
      */
     private String getMessageByBot() {
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         realm.beginTransaction();
         Number maxId = realm.where(ChatMessage.class).max("id");
         long nextId = 1;
-        if(maxId != null) nextId = maxId.longValue() + 1;
+        if (maxId != null) nextId = maxId.longValue() + 1;
         ChatMessage chat = realm.createObject(ChatMessage.class, nextId);
         // 各要素の永続化
         chat.setDate(date);
