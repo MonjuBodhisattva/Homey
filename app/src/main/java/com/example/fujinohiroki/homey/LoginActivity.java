@@ -40,6 +40,11 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
+     * LoaderCallbacks<Cursor>をimplements(実装)しているのは、
+     * onCreateLoader,onLoadFinishedでEmailのオートコンプリート機能を実装するため
+     */
+
+    /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
@@ -212,8 +217,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * 以下、レイアウトで実装したProgressBarのアニメーションを実装する。
+     * AndroidのOSバージョンに合わせて適切な処理分けもされる。
      */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -302,8 +309,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
+     * 非同期通信処理の実装（サーバー通信するためのバックグラウンドでの通信処理を側だけ実装）
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
