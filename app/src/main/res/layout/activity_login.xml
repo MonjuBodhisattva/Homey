@@ -41,7 +41,7 @@
                     android:hint="メールアドレス"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -59,12 +59,12 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/sign_in"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,13 +73,14 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/move_to_sign_up"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="新規登録"
-                android:textStyle="bold" />
+                android:text="新規登録へ"
+                android:textStyle="bold"
+                android:onClick="onmove_to_sign_upClickButton (LoginActivity)" />
 
         </LinearLayout>
     </ScrollView>
