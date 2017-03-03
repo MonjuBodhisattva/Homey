@@ -17,8 +17,8 @@ public class User extends RealmObject{
         return name;
     }
 
-    public int getId() {
-        return (int) id;
+    public long getId() {
+        return id;
     }
 
     public String getPassword() {
@@ -44,4 +44,5 @@ public class User extends RealmObject{
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
