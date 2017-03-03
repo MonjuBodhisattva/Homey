@@ -9,7 +9,7 @@ import io.realm.RealmObject;
 public class User extends RealmObject{
     private String          name;
     private long            id;
-    private String          pass;
+    private String          password;
     private String          email;
 
 
@@ -22,7 +22,7 @@ public class User extends RealmObject{
     }
 
     public String getPass() {
-        return pass;
+        return password;
     }
 
     public String getEmail() {
@@ -38,7 +38,7 @@ public class User extends RealmObject{
     }
 
     public void setPass(String pass) {
-        this.pass = pass;
+        this.password = pass;
     }
 
     public void setEmail(String email) {
