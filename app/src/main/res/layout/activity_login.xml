@@ -80,7 +80,7 @@
                 android:layout_marginTop="16dp"
                 android:text="新規登録へ"
                 android:textStyle="bold"
-                android:onClick="onmove_to_sign_upClickButton (LoginActivity)" />
+                android:onClick="onMoveToSignUpClickButton (LoginActivity)" />
 
         </LinearLayout>
     </ScrollView>

@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.id.sign_in || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
@@ -357,7 +357,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
     }
-    public void onmove_to_sign_upClickButton(View v){
+
+    public void onMoveToSignUpClickButton(View v){
         //インテントの生成
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
