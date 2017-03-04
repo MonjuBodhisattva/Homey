@@ -73,7 +73,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/move_to_sign_up"
+                android:id="@+id/move_to_sign_up_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private Button moveButton;
+    private Button moveToSignUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +95,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        OnClickListener moveButtonClickListener = new OnClickListener() {
+
+        // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
+        OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
             }
         };
-        moveButton = (Button) findViewById(R.id.move_to_sign_up);
-        moveButton.setOnClickListener(moveButtonClickListener);
+        moveToSignUpButton = (Button) findViewById(R.id.move_to_sign_up_button);
+        moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
     }
 
     private void populateAutoComplete() {

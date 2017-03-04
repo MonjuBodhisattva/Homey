@@ -15,6 +15,8 @@ import io.realm.internal.Table;
 
 /**
  * Created by fujinohiroki on 2017/03/04.
+ * Migrationクラス
+ * Realmのスキーマをバージョン管理するクラス
  */
 
 public class Migration implements RealmMigration {
@@ -24,7 +26,6 @@ public class Migration implements RealmMigration {
 
         RealmSchema schema = realm.getSchema();
         /*
-
             UserモデルのidをPrimaryKeyに設定する
             @Primary
             long id;
