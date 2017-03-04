@@ -54,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="パスワード"
-                    android:imeActionId="@integer/login"
+                    android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
@@ -73,12 +73,12 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/move_to_sign_up"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="新規登録"
+                android:text="新規登録へ"
                 android:textStyle="bold" />
 
         </LinearLayout>
