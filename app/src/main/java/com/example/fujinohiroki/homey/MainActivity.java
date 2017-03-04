@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         chatListView = (ListView) findViewById(R.id.chatView);
         // Realmインスタンスの初期化
         Realm.init(this);
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
         realm = Realm.getInstance(realmConfig);
 
         userMessage = (EditText) findViewById(R.id.user_message); // 送信メッセージの取得
