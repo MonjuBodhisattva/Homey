@@ -1,16 +1,18 @@
 package com.example.fujinohiroki.homey;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by yanagawa on 2017/03/03.
  */
 
-public class User extends RealmObject{
-    private String          name;
-    private long            id;
-    private String          password;
-    private String          email;
+public class User extends RealmObject {
+    @PrimaryKey
+    private long id;
+    private String name;
+    private String password;
+    private String email;
 
 
     public String getName() {
