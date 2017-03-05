@@ -51,14 +51,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
+     * 既知のユーザー名・パスワードを格納したダミー認証。
+     * TODO: 本物の認証システムに繋げたら削除。
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * ログインタスクを追跡して、リクエストがあった場合にキャンセルできるようにする。
      */
     private UserLoginTask mAuthTask = null;
 
@@ -168,9 +168,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * ログインフォームでしていされたアカウントへのサインインまたは登録を試みる。
+     * フォームエラー（無効なメール、フィールドの欠落）がある場合は、
+     * エラーが表示され、実際のログイン試行は行われない。
      */
     private void attemptLogin() {
         if (mAuthTask != null) {
@@ -181,21 +181,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
+        // ログイン試行時に値を格納する。
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        // 有効なパスワードか確認する。
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // 有効なメールアドレスか確認する。
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
@@ -207,12 +211,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // エラーあり。ログインを試みたり、エラーのある最初のフォームにフォーカスする。
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // 進行スピナーを表示し、ユーザーのログイン試行を実行するバックグラウンドタスクを開始する。
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -220,13 +222,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        // アドレスに「@」が入っていなかったら、エラー。
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        // パスワードが8文字未満であったら、エラー。
+        return password.length() > 7;
     }
 
     /**
