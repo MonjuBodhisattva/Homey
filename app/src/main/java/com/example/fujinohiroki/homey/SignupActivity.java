@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
 
 public class SignupActivity extends AppCompatActivity {
@@ -24,6 +25,23 @@ public class SignupActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
+    }
+    //登録ボタンをクリック
+    //各欄に何も入力されていないとき
+    public void onClickButton(View v) {
+        if (username.length() == 0) {
+            username.setError(getResources().getString(R.id.username));
+        }else if{(password.length() == 0) {
+            password.setError(getResources().getString(R.id.password));
+        }else if{(email.length() == 0){
+            email.setError(getResources().getString(R.id.email));
+        }
+        else{
+                setError(null);
+            }
+        }
+            username.setError(null);
+        }
     }
 
 }
