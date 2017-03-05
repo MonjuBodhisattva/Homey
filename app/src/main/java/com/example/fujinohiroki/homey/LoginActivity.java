@@ -3,6 +3,14 @@ package com.example.fujinohiroki.homey;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+<<<<<<< HEAD
+=======
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+>>>>>>> master
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -60,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button moveToSignUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
+        OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
+            }
+        };
+        moveToSignUpButton = (Button) findViewById(R.id.move_to_sign_up_button);
+        moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
     }
 
     private void populateAutoComplete() {
@@ -363,5 +383,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
+
+
 }
 
