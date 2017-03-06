@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * LoaderCallbacks<Cursor>をimplements(実装)しているのは、
      * onCreateLoader,onLoadFinishedでEmailのオートコンプリート機能を実装するため
-     */
+    */
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * TODO: 本物の認証システムに繋げたら削除。
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
+            "a@a", "aaaaaaaa"
     };
     /**
      * ログインタスクを追跡して、リクエストがあった場合にキャンセルできるようにする。
@@ -341,7 +341,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
+                // Simulate network access.ここで、サーバーに聞く。
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
@@ -363,8 +363,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
             if (success) {
+                // 「ログイン」ボタンのクリックによるチャット画面への遷移。
+                Intent intent = new Intent(LoginActivity.this, ChatMessage.class);
+                startActivity(intent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
