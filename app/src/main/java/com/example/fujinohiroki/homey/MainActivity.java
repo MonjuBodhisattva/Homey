@@ -103,9 +103,8 @@ public class MainActivity extends AppCompatActivity {
             chat.setMessage(botMessage);
         } else {
             chat.setMessage(userMessage.getText().toString());
+            realm.commitTransaction();
         }
-        chat.setBot(isBot);
-        realm.commitTransaction();
     }
 
     /**
