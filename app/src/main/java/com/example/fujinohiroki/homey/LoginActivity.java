@@ -37,6 +37,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -106,6 +107,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //Realmインスタンスの初期化
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
 
         // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
         OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
