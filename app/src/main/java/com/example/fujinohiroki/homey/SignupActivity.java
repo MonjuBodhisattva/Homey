@@ -1,10 +1,14 @@
 package com.example.fujinohiroki.homey;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.Date;
@@ -19,10 +23,15 @@ public class SignupActivity extends AppCompatActivity {
     EditText email;
     Realm realm;
 
+    // UI references.
+    private AutoCompleteTextView mEmailView;
+    private EditText mPasswordView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        setupActionBar();
         //インテントを取得
         intent = getIntent();
         //入力された値を取得
@@ -30,28 +39,43 @@ public class SignupActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
+
+        Button mSignUpButton = (Button) findViewById(R.id.register_button);
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickButton(view);
+            }
+        });
     }
     //登録ボタンをクリック
     //各欄に何も入力されていないとき
 
     public void onClickButton(View v) {
+        View focusView = null;
+        System.out.print("onClickBotton");
+
         if (username.length() == 0) {
-            username.setError(getResources().getString(R.id.username));
+            username.setError("ユーザー名が入力されていません");
+            focusView = username;
         } else if (password.length() == 0) {
-            password.setError(getResources().getString(R.id.password));
+            password.setError("パスワードが入力されていません。");
+            focusView = password;
         } else if (email.length() == 0) {
-            email.setError(getResources().getString(R.id.email));
+            email.setError("メールアドレスが入力されていません。");
+            focusView = email;
         } else {
             username.setError(null);
             password.setError(null);
             email.setError(null);
         }
+        focusView.requestFocus();
     }
+
     /**
      * ユーザー情報を登録する。
-     *
      */
-    private void registerUserInfo(){
+    private void registerUserInfo() {
         Date date = new Date();
         realm.beginTransaction();
         User user = realm.createObject(User.class);
@@ -62,23 +86,22 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-//    private void saveBotMessage(boolean isBot) {
-//        Date date = new Date();
-//        realm.beginTransaction();
-//        Number maxId = realm.where(ChatMessage.class).max("id");
-//        long nextId = 1;
-//        if (maxId != null) nextId = maxId.longValue() + 1;
-//        ChatMessage chat = realm.createObject(ChatMessage.class, nextId);
-//        // 各要素の永続化
-//        chat.setDate(date);
-//        if (isBot) {
-//            // botが返すメッセージを取得する
-//            botMessage = getMessageByBot();
-//            chat.setMessage(botMessage);
-//        } else {
-//            chat.setMessage(userMessage.getText().toString());
-//        }
-//        chat.setBot(isBot);
-//        realm.commitTransaction();
-//    }
+
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Show the Up button in the action bar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
 }
+//To do list
+//
+//    全項目が入力されているか
+//            同じemailの人がいないかどうか
+//    パスワードはハッシュ化する？ and 8文字以上とかにする？
+//    emailは「✖︎✖︎✖︎@✖︎✖︎」の形式にするか
