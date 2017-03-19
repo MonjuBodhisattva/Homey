@@ -53,17 +53,22 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onClickButton(View v) {
         View focusView = null;
-        System.out.print("onClickBotton");
 
         if (username.length() == 0) {
             username.setError("ユーザー名が入力されていません");
             focusView = username;
-        } else if (password.length() == 0) {
-            password.setError("パスワードが入力されていません。");
-            focusView = password;
         } else if (email.length() == 0) {
             email.setError("メールアドレスが入力されていません。");
             focusView = email;
+        } else if (!isEmailValid(email.getText().toString())) {
+            email.setError("入力されたメールアドレスは適切ではありません。");
+            focusView = email;
+        } else if (password.length() == 0) {
+            password.setError("パスワードが入力されていません。");
+            focusView = password;
+        } else if (!isPasswordValid(password.getText().toString())){
+            password.setError("パスワードは8文字以上15文字以下にしてください。");
+            focusView = password;
         } else {
             username.setError(null);
             password.setError(null);
@@ -98,10 +103,23 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-}
-//To do list
+
+    private boolean isEmailValid(String email) {
+        return email.contains("@");
+    }
+
+    private boolean isPasswordValid(String password) {
+        System.out.println("isPasswordValid");
+        boolean flag = false;
+
+        if (password.length() >= 8 && password.length() <= 15){
+            flag = true;
+        }
+
+        return flag;
+    }
+
+}//To do list
 //
-//    全項目が入力されているか
-//            同じemailの人がいないかどうか
-//    パスワードはハッシュ化する？ and 8文字以上とかにする？
-//    emailは「✖︎✖︎✖︎@✖︎✖︎」の形式にするか
+//    パスワードはハッシュ化する？
+
