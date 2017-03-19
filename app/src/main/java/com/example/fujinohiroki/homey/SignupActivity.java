@@ -103,11 +103,20 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * ＠を含んでいない場合はエラーメッセージを表示
+     * @param email
+     * @return
+     */
     private boolean isEmailValid(String email) {
         return email.contains("@");
     }
 
+    /**
+     * パスワードは8文字以上15文字以下で入力されなければエラーメッセージを表示
+     * @param password
+     * @return
+     */
     private boolean isPasswordValid(String password) {
         System.out.println("isPasswordValid");
         boolean flag = false;
@@ -115,11 +124,8 @@ public class SignupActivity extends AppCompatActivity {
         if (password.length() >= 8 && password.length() <= 15){
             flag = true;
         }
-
         return flag;
     }
 
-}//To do list
-//
-//    パスワードはハッシュ化する？
+}
 
