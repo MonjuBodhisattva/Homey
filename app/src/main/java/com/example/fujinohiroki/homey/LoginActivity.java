@@ -30,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -85,7 +86,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setupActionBar();
 
         //User情報の取得。これは、MainActivityのようにLoginAdapterを作成してidを指定しないとできないの？？
-
         //Realmインスタンスの初期化
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
