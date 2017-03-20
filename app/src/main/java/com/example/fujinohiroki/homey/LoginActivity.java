@@ -37,6 +37,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -75,16 +76,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private Button moveToSignUpButton;
     Realm realm;
+    public RealmObject User;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setupActionBar();
-        // Set up the login form.
+
+        //User情報の取得。これは、MainActivityのようにLoginAdapterを作成してidを指定しないとできないの？？
+
+        //Realmインスタンスの初期化
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        realm = Realm.getInstance(realmConfiguration);
+
+        // emailアドレスの取得
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+        //passwordの取得
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -107,10 +118,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        //Realmインスタンスの初期化
-        Realm.init(this);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
 
         // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
         OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
