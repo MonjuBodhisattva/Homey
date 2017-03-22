@@ -77,7 +77,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private Button moveToSignUpButton;
     Realm realm;
-    public RealmObject User;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +84,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         setupActionBar();
 
-        //User情報の取得。これは、MainActivityのようにLoginAdapterを作成してidを指定しないとできないの？？
         //Realmインスタンスの初期化
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
@@ -97,6 +95,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         //passwordの取得
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        //Enterキーが入力された時に呼ばれるコールバック処理
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
