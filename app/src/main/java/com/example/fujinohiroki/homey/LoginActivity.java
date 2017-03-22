@@ -96,15 +96,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //passwordの取得
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        // ユーザーモデルを取得する
-        final RealmResults<User> user =
-                realm.where(User.class).findAll();
-
         //Enterキーが入力された時に呼ばれるコールバック処理
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    // ユーザーモデルを取得する:findAllではなく、渡ってきたemailとpasswordでand条件で認証する
+                    final RealmResults<User> user =
+                            realm.where(User.class).findAll();
                     attemptLogin();
                     return true;
                 }
