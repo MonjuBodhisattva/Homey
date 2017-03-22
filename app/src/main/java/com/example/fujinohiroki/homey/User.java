@@ -16,9 +16,11 @@ import io.realm.annotations.PrimaryKey;
 public class User extends RealmObject{
     //idが一意であることを保証するため。これにより、idを指定すれば、更新や削除ができます。
     @PrimaryKey
+    private long            id;
+
     //name,password,emailは、それぞれ「ユーザー名」「パスワード」「メールアドレス」を保存するために用意しました。
     private String          name;
-    private long            id;
+
     private String          password;
     private String          email;
 
