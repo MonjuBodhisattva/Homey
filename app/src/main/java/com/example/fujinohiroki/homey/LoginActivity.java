@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -86,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         //Realmインスタンスの初期化
         Realm.init(this);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        final RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
         realm = Realm.getInstance(realmConfiguration);
 
         // emailアドレスの取得
@@ -100,10 +101,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    // ユーザーモデルを取得する:findAllではなく、渡ってきたemailとpasswordでand条件で認証する
-                    final RealmResults<User> user =
-                            realm.where(User.class).findAll();
+
+                RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
+                        .equalTo("email", String.valueOf(mEmailView)) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
+                        .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
+                        .findAll();
+
+                if (id == R.id.login || id == EditorInfo.IME_NULL) //これは元々あったけど意味のわからなかった一文
+                {
                     attemptLogin();
                     return true;
                 }
