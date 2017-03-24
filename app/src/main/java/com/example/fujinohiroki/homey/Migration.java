@@ -21,6 +21,17 @@ import io.realm.internal.Table;
 
 public class Migration implements RealmMigration {
 
+    public int hashCode() {
+        return Migration.class.hashCode();
+    }
+
+    public boolean equals(Object object) {
+        if(object == null) {
+            return false;
+        }
+        return object instanceof Migration;
+    }
+
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
