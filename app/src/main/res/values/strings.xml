@@ -6,8 +6,8 @@
     <string name="action_sign_in" />
     <string name="title_activity_login">Sign in</string>
     <string name="error_invalid_email">メールアドレスを正しく入力してね！</string>
-    <string name="error_invalid_password">８文字以上入力しよう！</string>
-    <string name="error_incorrect_password">パスワードが間違っているみたいだよ！</string>
+    <string name="error_invalid_password">パスワードを正しく入力しよう！</string>
+    <string name="error_incorrect_password">メールアドレスかパスワードが間違っているみたいだよ！</string>
     <string name="error_field_required">ここは入力してね！</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

@@ -107,7 +107,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
                         .findAll();
 
-                if (id == R.id.login || id == EditorInfo.IME_NULL) //これは元々あったけど意味のわからなかった一文
+                if (user != null)
+                        //id == R.id.login || id == EditorInfo.IME_NULL) //これは元々あったけど意味のわからなかった一文
                 {
                     attemptLogin();
                     return true;
