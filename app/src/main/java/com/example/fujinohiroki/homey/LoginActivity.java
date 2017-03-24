@@ -392,7 +392,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
             if (success) {
                 // 「ログイン」ボタンのクリックによるチャット画面への遷移。
-                Intent intent = new Intent(LoginActivity.this, ChatMessage.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             } else {
