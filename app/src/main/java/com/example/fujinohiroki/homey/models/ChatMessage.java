@@ -1,4 +1,4 @@
-package com.example.fujinohiroki.homey;
+package com.example.fujinohiroki.homey.models;
 
 import java.util.Date;
 

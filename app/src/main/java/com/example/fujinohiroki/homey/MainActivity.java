@@ -10,12 +10,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.fujinohiroki.homey.adapters.ChatMessageAdapter;
+import com.example.fujinohiroki.homey.models.ChatMessage;
+import com.example.fujinohiroki.homey.models.Migration;
+
 import java.util.Date;
 import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+
 
 public class MainActivity extends AppCompatActivity {
 
