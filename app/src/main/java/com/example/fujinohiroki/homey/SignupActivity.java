@@ -92,7 +92,10 @@ public class SignupActivity extends AppCompatActivity {
     private void registerUserInfo() {
         Date date = new Date();
         realm.beginTransaction();
-        User user = realm.createObject(User.class);
+        Number maxId = realm.where(User.class).max("id");
+        long nextId = 1;
+        if (maxId != null) nextId = maxId.longValue() + 1;
+        User user = realm.createObject(User.class, nextId);
         user.setName(username.getText().toString());
         user.setEmail(email.getText().toString());
         user.setPassword(password.getText().toString());
