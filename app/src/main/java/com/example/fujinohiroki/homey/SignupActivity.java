@@ -34,11 +34,11 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         setupActionBar();
         //インテントを取得
-        // Realmインスタンスの初期化
-        //Realm.init(this);
-        //RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
-        //realm = Realm.getInstance(realmConfig);
         intent = getIntent();
+        // Realmインスタンスの初期化
+        Realm.init(this);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        realm = Realm.getInstance(realmConfig);
         //入力された値を取得
         Resources res = getResources();
         username = (EditText) findViewById(R.id.username);
@@ -79,7 +79,10 @@ public class SignupActivity extends AppCompatActivity {
             password.setError(null);
             email.setError(null);
         }
-        focusView.requestFocus();
+
+        if (!(focusView == null)) {
+            focusView.requestFocus();
+        }
         registerUserInfo();
     }
 
@@ -124,7 +127,6 @@ public class SignupActivity extends AppCompatActivity {
      * @return
      */
     private boolean isPasswordValid(String password) {
-        System.out.println("isPasswordValid");
         boolean flag = false;
 
         if (password.length() >= 8 && password.length() <= 15){
