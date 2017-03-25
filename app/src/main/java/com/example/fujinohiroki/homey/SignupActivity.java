@@ -14,6 +14,7 @@ import android.widget.EditText;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class SignupActivity extends AppCompatActivity {
     //インテント
@@ -33,6 +34,10 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         setupActionBar();
         //インテントを取得
+        // Realmインスタンスの初期化
+        //Realm.init(this);
+        //RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        //realm = Realm.getInstance(realmConfig);
         intent = getIntent();
         //入力された値を取得
         Resources res = getResources();
@@ -75,6 +80,7 @@ public class SignupActivity extends AppCompatActivity {
             email.setError(null);
         }
         focusView.requestFocus();
+        registerUserInfo();
     }
 
     /**
