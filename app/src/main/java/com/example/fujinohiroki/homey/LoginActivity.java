@@ -44,40 +44,65 @@ import io.realm.RealmResults;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    /**
-     * LoaderCallbacks<Cursor>をimplements(実装)しているのは、
-     * onCreateLoader,onLoadFinishedでEmailのオートコンプリート機能を実装するため
-    */
-
-    /**
-     * int型の「REQUEST_READ_CONTACTS」クラス変数（変更不可）を宣言し、0で初期化している。Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
-    /**
-     * 既知のユーザー名・パスワードを格納したダミー認証。
-     * TODO: 本物の認証システムに繋げたら削除。
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "a@a", "aaaaaaaa"
-    };
-    /**
-     * ログインタスクを追跡して、リクエストがあった場合にキャンセルできるようにする。
-     */
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
     private Button moveToSignUpButton;
     Realm realm;
+
+    private static final int REQUEST_READ_CONTACTS = 0;
+
+    /**
+     * ログインフォームでしていされたアカウントへのサインインまたは登録を試みる。
+     * フォームエラー（フィールドの欠落）がある場合は、
+     * エラーが表示され、実際のログイン試行は行われない。
+     */
+    private void attemptLogin() {
+        if (mAuthTask != null) {
+            return;
+        }
+
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+
+        // ログイン試行時に値を格納する。
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // パスワードか入力されているか確認する。
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // メールアドレスが入力されているか確認する。
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // エラーあり。ログインを試みたり、エラーのある最初のフォームにフォーカスする。
+            focusView.requestFocus();
+        } else {
+            // ユーザーのログイン試行を実行するバックグラウンドタスクを開始する。
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
+        }
+    }
+
+    /**
+     * ログインタスクを追跡して、リクエストがあった場合にキャンセルできるようにする。
+     */
+    private UserLoginTask mAuthTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +132,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
                         .findAll();
 
-                if (user != null)
-                        //id == R.id.login || id == EditorInfo.IME_NULL) //これは元々あったけど意味のわからなかった一文
-                {
-                    attemptLogin();
-                    return true;
+                if (user !=null) {
+                    // 「ログイン」ボタンのクリックによるチャット画面への遷移。
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
                 }
                 return false;
             }
@@ -124,10 +152,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-
         // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
         OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
             @Override
@@ -195,88 +219,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * ログインフォームでしていされたアカウントへのサインインまたは登録を試みる。
-     * フォームエラー（無効なメール、フィールドの欠落）がある場合は、
-     * エラーが表示され、実際のログイン試行は行われない。
-     */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
-        // ログイン試行時に値を格納する。
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // パスワードか入力されているか確認する。
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // メールアドレスが入力されているか確認する。
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // エラーあり。ログインを試みたり、エラーのある最初のフォームにフォーカスする。
-            focusView.requestFocus();
-        } else {
-            // 進行スピナーを表示し、ユーザーのログイン試行を実行するバックグラウンドタスクを開始する。
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-    }
-
-    /**
      * 以下、レイアウトで実装したProgressBarのアニメーションを実装する。
      * AndroidのOSバージョンに合わせて適切な処理分けもされる。
      */
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -356,14 +301,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
             // TODO: register the new account here.
             return true;
         }
@@ -371,7 +308,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
             if (success) {
                 // 「ログイン」ボタンのクリックによるチャット画面への遷移。
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -386,7 +322,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
         }
     }
 
