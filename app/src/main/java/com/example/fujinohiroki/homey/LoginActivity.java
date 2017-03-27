@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     */
 
     /**
-     * Id to identity READ_CONTACTS permission request.
+     * int型の「REQUEST_READ_CONTACTS」クラス変数（変更不可）を宣言し、0で初期化している。Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
@@ -215,24 +215,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // 有効なパスワードか確認する。
+        // パスワードか入力されているか確認する。
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
-        } else if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
         }
 
-        // 有効なメールアドレスか確認する。
+        // メールアドレスが入力されているか確認する。
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
@@ -246,16 +238,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        // アドレスに「@」が入っていなかったら、エラー。
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        // パスワードが8文字未満であったら、エラー。
-        return password.length() > 7;
     }
 
     /**
