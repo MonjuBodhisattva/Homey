@@ -44,25 +44,63 @@ import io.realm.RealmResults;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity {
 
-    // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private Button moveToSignUpButton;
     Realm realm;
 
-    private static final int REQUEST_READ_CONTACTS = 0;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-    /**
-     * ログインフォームでしていされたアカウントへのサインインまたは登録を試みる。
-     * フォームエラー（フィールドの欠落）がある場合は、
-     * エラーが表示され、実際のログイン試行は行われない。
-     */
+        //Realmインスタンスの初期化
+        Realm.init(this);
+        final RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        realm = Realm.getInstance(realmConfiguration);
+
+        // emailアドレスの取得
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        //populateAutoComplete();
+
+        //passwordの取得
+        mPasswordView = (EditText) findViewById(R.id.password);
+
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
+                        .equalTo("email", String.valueOf(mEmailView)) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
+                        .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
+                        .findAll();
+
+                if (user != null) {
+                    attemptLogin();
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+            }
+        });
+
+        // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
+        OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
+            }
+        };
+        moveToSignUpButton = (Button) findViewById(R.id.move_to_sign_up_button);
+        moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
+    }
+
+
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -93,77 +131,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // エラーあり。ログインを試みたり、エラーのある最初のフォームにフォーカスする。
             focusView.requestFocus();
         } else {
-            // ユーザーのログイン試行を実行するバックグラウンドタスクを開始する。
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
-    /**
-     * ログインタスクを追跡して、リクエストがあった場合にキャンセルできるようにする。
-     */
-    private UserLoginTask mAuthTask = null;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        setupActionBar();
-
-        //Realmインスタンスの初期化
-        Realm.init(this);
-        final RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
-        realm = Realm.getInstance(realmConfiguration);
-
-        // emailアドレスの取得
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
-
-        //passwordの取得
-        mPasswordView = (EditText) findViewById(R.id.password);
-
-        //Enterキーが入力された時に呼ばれるコールバック処理
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-
-                RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
-                        .equalTo("email", String.valueOf(mEmailView)) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
-                        .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
-                        .findAll();
-
-                if (user !=null) {
-                    // 「ログイン」ボタンのクリックによるチャット画面への遷移。
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
-                }
-                return false;
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-        // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
-        OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(intent);
-            }
-        };
-        moveToSignUpButton = (Button) findViewById(R.id.move_to_sign_up_button);
-        moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
-    }
-
+}
+/**
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -192,11 +168,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
         return false;
-    }
+    }*/
 
     /**
      * Callback received when a permissions request has been completed.
-     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -205,11 +181,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 populateAutoComplete();
             }
         }
-    }
+    }*/
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -217,11 +193,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
-
+*/
     /**
      * 以下、レイアウトで実装したProgressBarのアニメーションを実装する。
      * AndroidのOSバージョンに合わせて適切な処理分けもされる。
-     */
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -276,10 +252,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
     }
-
+*/
     /**
      * 非同期通信処理の実装（サーバー通信するためのバックグラウンドでの通信処理を側だけ実装）
-     */
+
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -323,8 +299,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onCancelled() {
             mAuthTask = null;
         }
-    }
+    }*/
 
 
-}
+
 
