@@ -50,56 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private Button moveToSignUpButton;
     Realm realm;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        //Realmインスタンスの初期化
-        Realm.init(this);
-        final RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
-        realm = Realm.getInstance(realmConfiguration);
-
-        // emailアドレスの取得
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        //populateAutoComplete();
-
-        //passwordの取得
-        mPasswordView = (EditText) findViewById(R.id.password);
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
-                        .equalTo("email", String.valueOf(mEmailView)) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
-                        .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
-                        .findAll();
-
-                if (user != null) {
-                    attemptLogin();
-                } else {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
-                }
-            }
-        });
-
-        // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
-        OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(intent);
-            }
-        };
-        moveToSignUpButton = (Button) findViewById(R.id.move_to_sign_up_button);
-        moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
-    }
-
-
+/**
     private void attemptLogin() {
 
         // Reset errors.
@@ -135,8 +86,57 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-    }
+    }*/
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        //Realmインスタンスの初期化
+        Realm.init(this);
+        final RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        realm = Realm.getInstance(realmConfiguration);
+
+        // emailアドレスの取得
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        //populateAutoComplete();
+
+        //passwordの取得
+        mPasswordView = (EditText) findViewById(R.id.password);
+
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
+                        .equalTo("email", String.valueOf(mEmailView)) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
+                        .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
+                        .findAll();
+
+                if (user != null) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
+            }
+        });
+
+        // 「新規登録へ」ボタンのクリックによる新規登録画面への遷移
+        OnClickListener moveToSignUpButtonClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
+            }
+        };
+        moveToSignUpButton = (Button) findViewById(R.id.move_to_sign_up_button);
+        moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
+    }
 
 }
 /**
