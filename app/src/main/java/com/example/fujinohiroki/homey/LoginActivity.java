@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private Button moveToSignUpButton;
     Realm realm;
-/**
+
     private void attemptLogin() {
 
         // Reset errors.
@@ -64,17 +64,17 @@ public class LoginActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // パスワードか入力されているか確認する。
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
         // メールアドレスが入力されているか確認する。
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
+            cancel = true;
+        }
+
+        // パスワードか入力されているか確認する。
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
         }
 
@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-    }*/
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,12 +110,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
+
                 RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
-                        .equalTo("email", String.valueOf(mEmailView)) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
-                        .equalTo("password", String.valueOf(mPasswordView)) //passwordが入力されたものと一致するUser
+                        .equalTo("email", String.valueOf(mEmailView.getText())) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
+                        .equalTo("password", String.valueOf(mPasswordView.getText())) //passwordが入力されたものと一致するUser
                         .findAll();
 
-                if (user != null) {
+                if (user.size() != 0 ) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
