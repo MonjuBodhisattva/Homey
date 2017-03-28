@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button moveToSignUpButton;
     Realm realm;
 
-    private void attemptLogin() {
+    /**private void attemptLogin() {
 
         // Reset errors.
         mEmailView.setError(null);
@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-    }
+    } */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +109,6 @@ public class LoginActivity extends AppCompatActivity {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
 
                 RealmResults<User> user = realm.where(User.class) //以下二つのクエリ（抽出条件）に合うユーザーをテーブルからすべて取得して、RealmResult<E>型の変数userに格納します
                         .equalTo("email", String.valueOf(mEmailView.getText())) //emailが入力されたものと一致するUser（暗黙的にAND条件になる）
