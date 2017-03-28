@@ -15,6 +15,9 @@ import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+
+import static android.R.attr.id;
 
 public class SignupActivity extends AppCompatActivity {
     //インテント
@@ -23,6 +26,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText password;
     EditText email;
     Realm realm;
+    Button button2;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -33,17 +37,21 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         setupActionBar();
+
         //インテントを取得
         intent = getIntent();
+
         // Realmインスタンスの初期化
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
         realm = Realm.getInstance(realmConfig);
+
         //入力された値を取得
         Resources res = getResources();
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
+        button2 = (Button) findViewById(R.id.button2);
 
         Button mSignUpButton = (Button) findViewById(R.id.register_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +60,21 @@ public class SignupActivity extends AppCompatActivity {
                 onClickButton(view);
             }
         });
+
+        //ボタン２をクリックしてRealmを確認する
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Number userid;
+                userid = realm.where(User.class).max("id");
+                RealmResults<User> usernamer = realm.where(User.class).findAll();
+                System.out.println(userid);
+                System.out.println(usernamer);
+            }
+        });
     }
+
+
     //登録ボタンをクリック
     //各欄に何も入力されていないとき
 
@@ -100,8 +122,10 @@ public class SignupActivity extends AppCompatActivity {
         user.setEmail(email.getText().toString());
         user.setPassword(password.getText().toString());
         realm.commitTransaction();
-
-    }
+        realm.close();
+        Intent moveIntent = new Intent(this,MainActivity.class);
+        startActivity(moveIntent);
+            }
 
 
     /**
