@@ -80,22 +80,27 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onClickButton(View v) {
         View focusView = null;
-
+        boolean flag = true;
         if (username.length() == 0) {
             username.setError("ユーザー名が入力されていません");
             focusView = username;
+            flag = false;
         } else if (email.length() == 0) {
             email.setError("メールアドレスが入力されていません。");
             focusView = email;
+            flag = false;
         } else if (!isEmailValid(email.getText().toString())) {
             email.setError("入力されたメールアドレスは適切ではありません。");
             focusView = email;
+            flag = false;
         } else if (password.length() == 0) {
             password.setError("パスワードが入力されていません。");
             focusView = password;
-        } else if (!isPasswordValid(password.getText().toString())){
+            flag = false;
+        } else if (!isPasswordValid(password.getText().toString())) {
             password.setError("パスワードは8文字以上15文字以下にしてください。");
             focusView = password;
+            flag = false;
         } else {
             username.setError(null);
             password.setError(null);
@@ -106,6 +111,12 @@ public class SignupActivity extends AppCompatActivity {
             focusView.requestFocus();
         }
         registerUserInfo();
+        realm.close();
+        if (flag == true) {
+            Intent moveIntent = new Intent(this, MainActivity.class);
+            startActivity(moveIntent);
+        }
+
     }
 
     /**
@@ -122,10 +133,7 @@ public class SignupActivity extends AppCompatActivity {
         user.setEmail(email.getText().toString());
         user.setPassword(password.getText().toString());
         realm.commitTransaction();
-        realm.close();
-        Intent moveIntent = new Intent(this,MainActivity.class);
-        startActivity(moveIntent);
-            }
+    }
 
 
     /**
@@ -141,6 +149,7 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * ＠を含んでいない場合はエラーメッセージを表示
+     *
      * @param email
      * @return
      */
@@ -150,13 +159,14 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * パスワードは8文字以上15文字以下で入力されなければエラーメッセージを表示
+     *
      * @param password
      * @return
      */
     private boolean isPasswordValid(String password) {
         boolean flag = false;
 
-        if (password.length() >= 8 && password.length() <= 15){
+        if (password.length() >= 8 && password.length() <= 15) {
             flag = true;
         }
         return flag;
