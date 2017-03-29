@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -74,14 +76,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * ユーザー認証
-     */
-    public void userAuthentication() {
-
-        //RealmQuery<User> emailRegistered =
-        Long cnt = realm.where(User.class).contains("email", email.getText().toString()).contains("password",password.getText().toString();
-        if(cnt >=)1}
 
 
     //登録ボタンをクリック
@@ -119,15 +113,33 @@ public class SignupActivity extends AppCompatActivity {
         if (!(focusView == null)) {
             focusView.requestFocus();
         }
-        registerUserInfo();
-        realm.close();
         if (flag == true) {
-            Intent moveIntent = new Intent(this, MainActivity.class);
-            startActivity(moveIntent);
+          //認証
+            if(certificationUserInfo()) {
+                //if(cnt < 0) {
+                //登録
+                registerUserInfo();
+                realm.close();
+                //遷移
+                Intent moveIntent = new Intent(this, MainActivity.class);
+                startActivity(moveIntent);
+                //}
+            }
         }
-
     }
 
+    /*
+    *ユーザー認証
+    */
+    public boolean certificationUserInfo() {
+        Long cnt = realm.where(User.class).equalTo("email", email.getText().toString()).equalTo("name", username.getText().toString()).count();
+        System.out.println(cnt);
+        if (cnt >= 1) {
+            Toast.makeText(SignupActivity.this, "入力された情報は既に登録されています。", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
 
     /**
      * ユーザー情報を登録する。
