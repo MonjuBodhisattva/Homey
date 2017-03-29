@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "815083198465",
+    "firebase_url": "https://homeynotification.firebaseio.com",
+    "project_id": "homeynotification",
+    "storage_bucket": "homeynotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815083198465:android:9b12289b7a3b8ef8",
+        "android_client_info": {
+          "package_name": "com.example.fujinohiroki.homey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815083198465-00fhbf9urs9naqcvcut30kr4r1604pkl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fujinohiroki.homey",
+            "certificate_hash": "e316792ff7876b948775caf4296e4d6d60054c8d"
+          }
+        },
+        {
+          "client_id": "815083198465-3qime47n7mi02e6bbdtu7u9ujvq7l69k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBId0HdXrG-ol1ujxKIV6ULzESI7SiwPiE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815083198465-3qime47n7mi02e6bbdtu7u9ujvq7l69k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
