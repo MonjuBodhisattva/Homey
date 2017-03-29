@@ -29,7 +29,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText password;
     EditText email;
     Realm realm;
-    Button confirmbutton;
+    Button confirmButton;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -54,7 +54,7 @@ public class SignupActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
-        confirmbutton = (Button) findViewById(R.id.confirmButton);
+        confirmButton = (Button) findViewById(R.id.confirmButton);
 
         Button mSignUpButton = (Button) findViewById(R.id.register_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,7 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         //ボタン２をクリックしてRealmを確認する
-        confirmbutton.setOnClickListener(new View.OnClickListener() {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Number userid;
@@ -83,7 +83,6 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onClickButton(View v) {
         View focusView = null;
-        boolean flag = true;
         if (username.length() == 0) {
             username.setError("ユーザー名が入力されていません");
             focusView = username;
@@ -104,12 +103,11 @@ public class SignupActivity extends AppCompatActivity {
             password.setError(null);
             email.setError(null);
         }
-        if (!(focusView == null)) {
+        if (focusView != null) {
             focusView.requestFocus();
-        }
-        if (focusView == null) {
-          //認証
-            if(certificationUserInfo()) {
+        } else {
+            //認証
+            if (certificationUserInfo()) {
                 //登録用関数
                 registerUserInfo();
                 realm.close();
