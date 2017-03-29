@@ -29,7 +29,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText password;
     EditText email;
     Realm realm;
-    Button button2;
+    Button confirmbutton;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -54,7 +54,7 @@ public class SignupActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
-        button2 = (Button) findViewById(R.id.button2);
+        confirmbutton = (Button) findViewById(R.id.confirmButton);
 
         Button mSignUpButton = (Button) findViewById(R.id.register_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,7 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         //ボタン２をクリックしてRealmを確認する
-        button2.setOnClickListener(new View.OnClickListener() {
+        confirmbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Number userid;
@@ -87,37 +87,30 @@ public class SignupActivity extends AppCompatActivity {
         if (username.length() == 0) {
             username.setError("ユーザー名が入力されていません");
             focusView = username;
-            flag = false;
         } else if (email.length() == 0) {
             email.setError("メールアドレスが入力されていません。");
             focusView = email;
-            flag = false;
         } else if (!isEmailValid(email.getText().toString())) {
             email.setError("入力されたメールアドレスは適切ではありません。");
             focusView = email;
-            flag = false;
         } else if (password.length() == 0) {
             password.setError("パスワードが入力されていません。");
             focusView = password;
-            flag = false;
         } else if (!isPasswordValid(password.getText().toString())) {
             password.setError("パスワードは8文字以上15文字以下にしてください。");
             focusView = password;
-            flag = false;
         } else {
             username.setError(null);
             password.setError(null);
             email.setError(null);
         }
-
         if (!(focusView == null)) {
             focusView.requestFocus();
         }
-        if (flag == true) {
+        if (focusView == null) {
           //認証
             if(certificationUserInfo()) {
-                //if(cnt < 0) {
-                //登録
+                //登録用関数
                 registerUserInfo();
                 realm.close();
                 //遷移
