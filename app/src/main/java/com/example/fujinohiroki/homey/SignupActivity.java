@@ -25,7 +25,7 @@ import static android.R.attr.id;
 public class SignupActivity extends AppCompatActivity {
     //インテント
     Intent intent;
-    EditText username;
+    EditText userName;
     EditText password;
     EditText email;
     Realm realm;
@@ -51,7 +51,7 @@ public class SignupActivity extends AppCompatActivity {
 
         //入力された値を取得
         Resources res = getResources();
-        username = (EditText) findViewById(R.id.username);
+        userName = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
         confirmButton = (Button) findViewById(R.id.confirmButton);
@@ -68,11 +68,11 @@ public class SignupActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Number userid;
-                userid = realm.where(User.class).max("id");
-                RealmResults<User> usernamer = realm.where(User.class).findAll();
-                System.out.println(userid);
-                System.out.println(usernamer);
+                Number userId;
+                userId = realm.where(User.class).max("id");
+                RealmResults<User> userNameR = realm.where(User.class).findAll();
+                System.out.println(userId);
+                System.out.println(userNameR);
             }
         });
     }
@@ -83,9 +83,9 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onClickButton(View v) {
         View focusView = null;
-        if (username.length() == 0) {
-            username.setError("ユーザー名が入力されていません");
-            focusView = username;
+        if (userName.length() == 0) {
+            userName.setError("ユーザー名が入力されていません");
+            focusView = userName;
         } else if (email.length() == 0) {
             email.setError("メールアドレスが入力されていません。");
             focusView = email;
@@ -99,7 +99,7 @@ public class SignupActivity extends AppCompatActivity {
             password.setError("パスワードは8文字以上15文字以下にしてください。");
             focusView = password;
         } else {
-            username.setError(null);
+            userName.setError(null);
             password.setError(null);
             email.setError(null);
         }
@@ -123,7 +123,7 @@ public class SignupActivity extends AppCompatActivity {
     *ユーザー認証
     */
     public boolean certificationUserInfo() {
-        Long cnt = realm.where(User.class).equalTo("email", email.getText().toString()).equalTo("name", username.getText().toString()).count();
+        Long cnt = realm.where(User.class).equalTo("email", email.getText().toString()).equalTo("name", userName.getText().toString()).count();
         System.out.println(cnt);
         if (cnt >= 1) {
             Toast.makeText(SignupActivity.this, "入力された情報は既に登録されています。", Toast.LENGTH_LONG).show();
@@ -142,7 +142,7 @@ public class SignupActivity extends AppCompatActivity {
         long nextId = 1;
         if (maxId != null) nextId = maxId.longValue() + 1;
         User user = realm.createObject(User.class, nextId);
-        user.setName(username.getText().toString());
+        user.setName(userName.getText().toString());
         user.setEmail(email.getText().toString());
         user.setPassword(password.getText().toString());
         realm.commitTransaction();
