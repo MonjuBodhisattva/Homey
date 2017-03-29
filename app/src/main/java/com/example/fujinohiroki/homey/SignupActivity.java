@@ -15,6 +15,7 @@ import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 import static android.R.attr.id;
@@ -73,6 +74,14 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+    /**
+     * ユーザー認証
+     */
+    public void userAuthentication() {
+
+        //RealmQuery<User> emailRegistered =
+        Long cnt = realm.where(User.class).contains("email", email.getText().toString()).contains("password",password.getText().toString();
+        if(cnt >=)1}
 
 
     //登録ボタンをクリック
@@ -118,6 +127,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
     }
+
 
     /**
      * ユーザー情報を登録する。
