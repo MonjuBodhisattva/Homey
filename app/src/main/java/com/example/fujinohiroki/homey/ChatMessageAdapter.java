@@ -72,7 +72,7 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
          */
         singleMessageContainer.setGravity(isbot? Gravity.LEFT : Gravity.RIGHT);
         viewHolder.message.setText(chatMessage.getMessage());
-        viewHolder.icon.setImageResource(isbot? R.drawable.homeylogo : 0);
+        viewHolder.icon.setImageResource(isbot? R.drawable.homeylogo4 : 0);
 
         return convertView;
     }

@@ -65,6 +65,7 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         //ボタン２をクリックしてRealmを確認する
+        //最後には消す
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +125,6 @@ public class SignupActivity extends AppCompatActivity {
     */
     public boolean certificationUserInfo() {
         Long cnt = realm.where(User.class).equalTo("email", email.getText().toString()).equalTo("name", userName.getText().toString()).count();
-        System.out.println(cnt);
         if (cnt >= 1) {
             Toast.makeText(SignupActivity.this, "入力された情報は既に登録されています。", Toast.LENGTH_LONG).show();
             return false;
