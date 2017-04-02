@@ -1,7 +1,16 @@
 package com.example.fujinohiroki.homey;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -114,6 +123,32 @@ public class MainActivity extends AppCompatActivity {
     private void closeKeyBoard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void sendNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                .setContentTitle("Homeyさん")
+                .setContentText("あの日の思い出を一緒に振り返ろう")
+                .setSmallIcon(R.drawable.homeylogo)
+                .setSmallIcon(R.drawable.homeylogo);
+        //.setShowWhen(ここで一年前or三ヶ月前or一ヶ月前or昨日の条件を書きたい。)
+
+        Intent resultIntent = new Intent(this,MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        // NotificationManagerを取得
+        NotificationManager manager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // Notificationを作成して通知
+        manager.notify(R.string.app_name, mBuilder.build());
     }
 
 }
