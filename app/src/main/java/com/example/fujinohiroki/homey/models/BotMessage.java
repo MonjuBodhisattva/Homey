@@ -12,16 +12,22 @@ import io.realm.annotations.PrimaryKey;
 public class BotMessage extends RealmObject {
     @PrimaryKey
     private long id;
-    private ChatMessage chatMessage;
+    private UserMessage userMessage;
     private String message;
     private Date date;
     private Boolean like;
 
-    public void setChatMessage(ChatMessage chatMessage) { this.chatMessage = chatMessage; }
+    public void setUserMessage(UserMessage userMessage) { this.userMessage = userMessage; }
 
     public void setMessage(String message) { this.message = message; }
 
     public void setDate(Date date) { this.date = date; }
 
     public void setLike(Boolean like) { this.like = like; }
+
+    public String getMessage() { return message; }
+
+    public Date getDate() { return date; }
+
+    public UserMessage getUserMessage() { return userMessage; }
 }

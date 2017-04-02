@@ -52,5 +52,52 @@ public class Migration implements RealmMigration {
                     .renameField("id_tmp", "id");
             oldVersion++;
         }
+        /*
+            BotMessageの追加
+            @Primary
+            long id;
+            ChatMessage chatMessage;
+            String message;
+            Date date;
+            boolean like;
+         */
+        if(oldVersion == 1) {
+            RealmObjectSchema chatMessageSchema = schema.get("ChatMessage");
+            /*RealmObjectSchema botMessageSchema = schema.create("BotMessage")
+                    .addField("id", long.class, FieldAttribute.PRIMARY_KEY)
+                    .addRealmObjectField("chatMessage", chatMessageSchema)
+                    .addField("message", String.class)
+                    .addField("date", Date.class)
+                    .addField("like", Boolean.class);*/
+            oldVersion++;
+        }
+        /*
+           ChatMessageのisBotフィールド削除・userフィールド追加
+           @Primary
+           long id;
+           String message;
+           Date date;
+           User user;
+         */
+        if(oldVersion == 2) {
+            RealmObjectSchema userSchema = schema.get("User");
+
+            /*RealmObjectSchema userMessageSchema = schema.create("UserMessage")
+                    .addField("id", long.class, FieldAttribute.PRIMARY_KEY)
+                    .addRealmObjectField("user", userSchema)
+                    .addField("message", String.class)
+                    .addField("date", Date.class);*/
+
+            oldVersion++;
+        }
+
+        if(oldVersion == 3) {
+            RealmObjectSchema userMessageSchema = schema.get("UserMessage");
+            schema.get("BotMessage")
+                    .removeField("chatMessage");
+
+            oldVersion++;
+        }
+        
     }
 }

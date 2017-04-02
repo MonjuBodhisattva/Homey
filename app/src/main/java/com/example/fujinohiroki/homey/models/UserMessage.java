@@ -9,20 +9,22 @@ import io.realm.annotations.PrimaryKey;
  * Created by fujinohiroki on 2017/02/11.
  */
 
-public class ChatMessage extends RealmObject {
+public class UserMessage extends RealmObject {
     @PrimaryKey
     private long id;
     private String message;
     private Date date;
-    private boolean isBot;
+    private User user;
 
     public String getMessage() {
         return message;
     }
 
-    public boolean getIsBot() {
-        return isBot;
+    public User getUser() {
+        return user;
     }
+
+    public Date getDate() { return date; }
 
     public void setId(long id) {
         this.id = id;
@@ -36,7 +38,5 @@ public class ChatMessage extends RealmObject {
         this.date = date;
     }
 
-    public void setBot(boolean isBot) {
-        this.isBot = isBot;
-    }
+    public void setUser(User user) { this.user = user; }
 }
