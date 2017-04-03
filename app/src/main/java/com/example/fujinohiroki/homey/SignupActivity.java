@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.fujinohiroki.homey.models.Migration;
+import com.example.fujinohiroki.homey.models.User;
+
 import java.util.Date;
 
 import io.realm.Realm;
@@ -46,7 +49,7 @@ public class SignupActivity extends AppCompatActivity {
 
         // Realmインスタンスの初期化
         Realm.init(this);
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(3).migration(new Migration()).build();
         realm = Realm.getInstance(realmConfig);
 
         //入力された値を取得
@@ -146,6 +149,7 @@ public class SignupActivity extends AppCompatActivity {
         user.setEmail(email.getText().toString());
         user.setPassword(password.getText().toString());
         realm.commitTransaction();
+        realm.close();
     }
 
 

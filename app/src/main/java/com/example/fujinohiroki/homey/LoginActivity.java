@@ -3,7 +3,9 @@ package com.example.fujinohiroki.homey;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +35,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.fujinohiroki.homey.models.Migration;
+import com.example.fujinohiroki.homey.models.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private Button moveToSignUpButton;
     Realm realm;
+    private SharedPreferences prefs;
 
     /**private void attemptLogin() {
 
@@ -95,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Realmインスタンスの初期化
         Realm.init(this);
-        final RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(0).migration(new Migration()).build();
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(3).migration(new Migration()).build();
         realm = Realm.getInstance(realmConfiguration);
 
         // emailアドレスの取得
@@ -116,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                         .findAll();
 
                 if (user.size() != 0 ) {
+                    saveLoginUserId(user.get(0).getId());
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -138,6 +145,13 @@ public class LoginActivity extends AppCompatActivity {
         moveToSignUpButton.setOnClickListener(moveToSignUpButtonClickListener);
     }
 
+    // ログインしたユーザーのIDを保存
+    private void saveLoginUserId(Long loginUserId) {
+        prefs = getSharedPreferences("Data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("loginUserId", loginUserId);
+        editor.commit();
+    }
 /**
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {

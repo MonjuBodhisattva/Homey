@@ -1,49 +1,50 @@
-package com.example.fujinohiroki.homey;
+package com.example.fujinohiroki.homey.adapters;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import io.realm.RealmBaseAdapter;
-import io.realm.RealmResults;
+import com.example.fujinohiroki.homey.ChatMessage;
+import com.example.fujinohiroki.homey.R;
+import com.example.fujinohiroki.homey.models.UserMessage;
+
+import java.util.List;
 
 /**
- * Created by fujinohiroki on 2017/02/11.
+ * Created by fujinohiroki on 2017/04/02.
  */
 
-public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
+public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private static class ViewHolder {
         TextView message;
-        TextView sender;
         ImageView icon;
     }
 
-    public ChatMessageAdapter(Context context,
-                              RealmResults<ChatMessage> realmResults) {
-        super(context, realmResults);
+    private LayoutInflater layoutInflater_;
+
+    public ChatMessageAdapter(Context context, int textViewResourceId, List<ChatMessage> objects) {
+        super(context, textViewResourceId, objects);
+        layoutInflater_ = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    /**
-     * リストビューのセルが必要になるたびに呼び出されて、表示するビューを戻り値として取得する
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
-     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        ChatMessageAdapter.ViewHolder viewHolder;
 
         int layoutResource = 0;
         /**
-         * realmResultsがadapterDataに変更されている
+         * realmResultsがadapter
+         * Dataに変更されている
          */
-        ChatMessage chatMessage = adapterData.get(position);
+        ChatMessage chatMessage = getItem(position);
         boolean isbot = chatMessage.getIsBot();
         layoutResource = R.layout.chat_message;
 
@@ -53,12 +54,12 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
          * スクロールではみ出した場合に画面の外に出たcontentViewを使い回す
          */
         if(convertView == null) {
-            convertView = inflater.inflate(layoutResource, parent, false);
-            viewHolder = new ViewHolder();
+            convertView = layoutInflater_.inflate(layoutResource, parent, false);
+            viewHolder = new ChatMessageAdapter.ViewHolder();
             viewHolder.message = (TextView) convertView.findViewById(R.id.chatMessage);
             viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ChatMessageAdapter.ViewHolder) convertView.getTag();
         }
 
         LinearLayout singleMessageContainer = (LinearLayout) convertView.findViewById(R.id.chatMessageContainer);
@@ -68,8 +69,10 @@ public class ChatMessageAdapter extends RealmBaseAdapter<ChatMessage> {
          * botのメッセージかどうかで左か右に振り分ける
          * botの場合はimageを挿入する
          */
+        singleMessageContainer.setGravity(Gravity.RIGHT);
         singleMessageContainer.setGravity(isbot? Gravity.LEFT : Gravity.RIGHT);
         viewHolder.message.setText(chatMessage.getMessage());
+        viewHolder.icon.setImageResource(0);
         viewHolder.icon.setImageResource(isbot? R.drawable.homeylogo : 0);
 
         return convertView;
