@@ -3,11 +3,11 @@ package com.example.fujinohiroki.homey;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,17 +24,11 @@ import com.example.fujinohiroki.homey.models.Migration;
 import com.example.fujinohiroki.homey.models.User;
 import com.example.fujinohiroki.homey.models.UserMessage;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -52,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     Long loginUserId;
     ChatMessageAdapter adapter;
     ArrayList<ChatMessage> chatMessages;
+    Button sendMessageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         // chatのlistView取得
         chatListView = (ListView) findViewById(R.id.chatView);
+        sendMessageButton = (Button) findViewById(R.id.button);
         // Realmインスタンスの初期化
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(3).migration(new Migration()).build();
@@ -128,16 +124,25 @@ public class MainActivity extends AppCompatActivity {
     public void onSendMessage(View view) {
         // キーボードを非表示にする
         closeKeyBoard(view);
-        // ユーザのメッセージ永続化
-        final UserMessage user = saveUserMessage();
-        Toast.makeText(this, "メッセージを送信しました", Toast.LENGTH_SHORT).show();
-        userMessage.getEditableText().clear(); // 入力文字を削除
-        chatListView.smoothScrollToPosition(chatListView.getCount() - 1);
-        // botから送信されるメッセージを永続化する
-        //saveBotMessage();
-        getBotMessage(user);
-        // listViewを下までスクロール
-        chatListView.smoothScrollToPosition(chatListView.getCount() - 1);
+        if(userMessage.getText().toString().length() == 0) {
+            userMessage.setError("メッセージを入力してください");
+            userMessage.requestFocus();
+        } else {
+            // ボタン無効化
+            sendMessageButton.setEnabled(false);
+            // ユーザのメッセージ永続化
+            final UserMessage user = saveUserMessage();
+            Toast.makeText(this, "メッセージを送信しました", Toast.LENGTH_SHORT).show();
+            userMessage.getEditableText().clear(); // 入力文字を削除
+            chatListView.smoothScrollToPosition(chatListView.getCount() - 1);
+            // botから送信されるメッセージを永続化する
+            //saveBotMessage();
+            getBotMessage(user);
+            // listViewを下までスクロール
+            chatListView.smoothScrollToPosition(chatListView.getCount() - 1);
+            // ボタン有効化
+            sendMessageButton.setEnabled(true);
+        }
     }
 
     /**
@@ -206,45 +211,31 @@ public class MainActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    /**
+     * APIにリクエストを送る
+     * @param userMessage
+     */
     private void getBotMessage(final UserMessage userMessage) {
 
-        final String requestUrl = "http://52.86.121.7";
+        final String requestUrl = "http://52.86.121.7/dialog/";
 
         RequestQueue getQueue = Volley.newRequestQueue(this);
 
-        /*StringRequest sRequest = new StringRequest(Request.Method.POST, requestUrl,
+        StringRequest sRequest = new StringRequest(Request.Method.GET, requestUrl+userMessage.getMessage(),
 
                 // 通信成功
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //
-                    }
-                },
-
-                // 通信失敗
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "通信に失敗しました。", Toast.LENGTH_SHORT).show();
-                    }
-                }){
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("message", userMessage.getText().toString());
-                    return params;
-                }
-        };*/
-        StringRequest sRequest = new StringRequest(Request.Method.GET, requestUrl,
-
-                // 通信成功
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // ここにレスポンスが入る
-                        String botMessage = response;
-                        saveBotMessage(userMessage, botMessage);
+                        try {
+                            // レスポンス文字列をjsonオブジェクトに変換して解析してゆく
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONObject result = jsonObject.getJSONObject("ResultSet");
+                            String botMessage = result.getString("response");
+                            saveBotMessage(userMessage, botMessage);
+                        } catch (JSONException e) {
+                            // error
+                        }
                     }
                 },
 
