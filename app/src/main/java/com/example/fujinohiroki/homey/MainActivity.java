@@ -15,11 +15,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -109,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
             UserMessage userMessage = botMessage.getUserMessage();
             if (userMessage != null) {
                 ChatMessage chatMessageByUser = new ChatMessage(userMessage.getId(), userMessage.getMessage(), false, userMessage.getDate(), false);
-                System.out.println(chatMessageByUser);
                 chatMessageList.add(chatMessageByUser);
             }
             ChatMessage chatMessageByBot = new ChatMessage(botMessage.getId(), botMessage.getMessage(), true, botMessage.getDate(), botMessage.getLike());
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void getBotMessage(final UserMessage userMessage) {
 
-        final String requestUrl = "http://52.86.121.7/dialog/";
+        final String requestUrl = "http://52.86.121.7/dialog2/";
 
         RequestQueue getQueue = Volley.newRequestQueue(this);
 
@@ -239,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            System.out.println(response);
                             // レスポンス文字列をjsonオブジェクトに変換して解析してゆく
                             JSONObject jsonObject = new JSONObject(response);
                             JSONObject result = jsonObject.getJSONObject("ResultSet");
@@ -259,6 +261,10 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        int custom_timeout_ms = 10000;
+        sRequest.setRetryPolicy(new DefaultRetryPolicy(custom_timeout_ms,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         getQueue.add(sRequest);
     }
 
@@ -266,15 +272,25 @@ public class MainActivity extends AppCompatActivity {
         long chatId = (long) view.getTag();
         /*View tempView = (View) view.getTag(2);
         ImageButton tempImageButton = (ImageButton) tempView.findViewById(R.id.likeButton);*/
-        ImageButton tempImageButton = (ImageButton) view.findViewById(R.id.likeButton);
+        //ImageView tempImageButton = (ImageView) view.findViewById(R.id.likeButton);
         System.out.println(chatId);
         realm.beginTransaction();
         BotMessage botMessage = realm.where(BotMessage.class).equalTo("id", chatId).findFirst();
         botMessage.setLike(!botMessage.getLike());
         realm.commitTransaction();
-        System.out.println(botMessage.getLike());
-        tempImageButton.setImageResource(botMessage.getLike()? R.drawable.heart : R.drawable.empty_heart);
+        //System.out.println(botMessage.getLike());
+        chatMessages = getChatMessage(loginUserId, true);
+        adapter = new ChatMessageAdapter(this, chatListView.getId(), chatMessages);
+        chatListView.setAdapter(adapter);
+        itemCount = chatListView.getCount();
+        // listViewを一番下にするa
+        chatListView.setItemChecked(itemCount - 1, true);
+        chatListView.setSelection(itemCount - 1);
         adapter.notifyDataSetChanged();
+        /*tempImageButton.setImageResource(botMessage.getLike()? R.drawable.heart_pink : R.drawable.heart_white);
+        adapter.notifyDataSetChanged();
+        chatListView.invalidateViews();
+        chatListView.refreshDrawableState();*/
     }
 
     public void onChangeChat(View view) {

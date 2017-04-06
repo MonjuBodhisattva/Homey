@@ -32,7 +32,6 @@ public class SignupActivity extends AppCompatActivity {
     EditText password;
     EditText email;
     Realm realm;
-    Button confirmButton;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -57,26 +56,12 @@ public class SignupActivity extends AppCompatActivity {
         userName = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         email = (EditText) findViewById(R.id.email);
-        confirmButton = (Button) findViewById(R.id.confirmButton);
 
         Button mSignUpButton = (Button) findViewById(R.id.register_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickButton(view);
-            }
-        });
-
-        //ボタン２をクリックしてRealmを確認する
-        //最後には消す
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Number userId;
-                userId = realm.where(User.class).max("id");
-                RealmResults<User> userNameR = realm.where(User.class).findAll();
-                System.out.println(userId);
-                System.out.println(userNameR);
             }
         });
     }
