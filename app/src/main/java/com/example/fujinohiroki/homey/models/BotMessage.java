@@ -30,4 +30,8 @@ public class BotMessage extends RealmObject {
     public Date getDate() { return date; }
 
     public UserMessage getUserMessage() { return userMessage; }
+
+    public Boolean getLike() { return like; }
+
+    public long getId() { return id; }
 }

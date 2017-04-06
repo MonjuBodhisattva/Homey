@@ -6,14 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.fujinohiroki.homey.ChatMessage;
 import com.example.fujinohiroki.homey.R;
-import com.example.fujinohiroki.homey.models.UserMessage;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
     private static class ViewHolder {
         TextView message;
         ImageView icon;
+        ImageView loveIcon;
     }
 
     private LayoutInflater layoutInflater_;
@@ -58,6 +58,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder = new ChatMessageAdapter.ViewHolder();
             viewHolder.message = (TextView) convertView.findViewById(R.id.chatMessage);
             viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
+            viewHolder.loveIcon = (ImageButton) convertView.findViewById(R.id.likeButton);
         } else {
             viewHolder = (ChatMessageAdapter.ViewHolder) convertView.getTag();
         }
@@ -69,11 +70,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
          * botのメッセージかどうかで左か右に振り分ける
          * botの場合はimageを挿入する
          */
-        singleMessageContainer.setGravity(Gravity.RIGHT);
+        //singleMessageContainer.setGravity(Gravity.RIGHT);
         singleMessageContainer.setGravity(isbot? Gravity.LEFT : Gravity.RIGHT);
         viewHolder.message.setText(chatMessage.getMessage());
-        viewHolder.icon.setImageResource(0);
+        //viewHolder.icon.setImageResource(0);
         viewHolder.icon.setImageResource(isbot? R.drawable.homeylogo : 0);
+        //viewHolder.loveIcon.setTag(1, convertView);
+        viewHolder.loveIcon.setTag(chatMessage.getChatId());
+        if(isbot) {
+            viewHolder.loveIcon.setImageResource(chatMessage.getLike()? R.drawable.heart : R.drawable.empty_heart);
+        } else {
+            viewHolder.loveIcon.setVisibility(View.INVISIBLE);
+        }
 
         return convertView;
     }
