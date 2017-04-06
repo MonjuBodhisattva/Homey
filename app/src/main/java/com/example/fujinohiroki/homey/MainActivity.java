@@ -2,14 +2,22 @@ package com.example.fujinohiroki.homey;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     ChatMessageAdapter adapter;
     ArrayList<ChatMessage> chatMessages;
     Button sendMessageButton;
+    TextView changeChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         // chatのlistView取得
         chatListView = (ListView) findViewById(R.id.chatView);
         sendMessageButton = (Button) findViewById(R.id.button);
+        changeChat = (TextView) findViewById(R.id.change_chat);
         // Realmインスタンスの初期化
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder().schemaVersion(3).migration(new Migration()).build();
@@ -67,10 +77,13 @@ public class MainActivity extends AppCompatActivity {
         // ログインしているユーザーのID取得
         loginUserId = getUserId();
 
+        getSupportActionBar().hide();
+        //getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFA500'>Homey</font>"));
+
         // メッセージを全て取得してListView上に出力する
         //final RealmResults<ChatMessage> chatMessages =
-                //realm.where(ChatMessage.class).findAll();
-        chatMessages = getChatMessage(loginUserId);
+        //realm.where(ChatMessage.class).findAll();
+        chatMessages = getChatMessage(loginUserId, true);
         adapter = new ChatMessageAdapter(this, chatListView.getId(), chatMessages);
         chatListView.setAdapter(adapter);
         itemCount = chatListView.getCount();
@@ -80,23 +93,26 @@ public class MainActivity extends AppCompatActivity {
         realm.close();
     }
 
-    private ArrayList<ChatMessage> getChatMessage(long userId) {
-        final RealmResults<BotMessage> botMessages =
-                realm.where(BotMessage.class).findAll();
-        ArrayList<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
-        for(final BotMessage botMessage : botMessages) {
+    private ArrayList<ChatMessage> getChatMessage(long userId, boolean isAll) {
+        RealmResults<BotMessage> botMessages;
+        if(isAll) {
+            botMessages =
+                    realm.where(BotMessage.class).equalTo("userMessage.user.id", userId).findAll();
+        } else {
+            botMessages =
+                    realm.where(BotMessage.class).equalTo("userMessage.user.id", userId).equalTo("like", true).findAll();
+        }
+        //final RealmResults<BotMessage> botMessages =
+        //                realm.where(BotMessage.class).findAll();
+        ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
+        for (final BotMessage botMessage : botMessages) {
             UserMessage userMessage = botMessage.getUserMessage();
-            if(userMessage != null) {
-                ChatMessage chatMessageByUser = new ChatMessage();
-                chatMessageByUser.setMessage(userMessage.getMessage());
-                chatMessageByUser.setDate(userMessage.getDate());
-                chatMessageByUser.setIsBot(false);
+            if (userMessage != null) {
+                ChatMessage chatMessageByUser = new ChatMessage(userMessage.getId(), userMessage.getMessage(), false, userMessage.getDate(), false);
+                System.out.println(chatMessageByUser);
                 chatMessageList.add(chatMessageByUser);
             }
-            ChatMessage chatMessageByBot = new ChatMessage();
-            chatMessageByBot.setMessage(botMessage.getMessage());
-            chatMessageByBot.setDate(botMessage.getDate());
-            chatMessageByBot.setIsBot(true);
+            ChatMessage chatMessageByBot = new ChatMessage(botMessage.getId(), botMessage.getMessage(), true, botMessage.getDate(), botMessage.getLike());
             chatMessageList.add(chatMessageByBot);
         }
         return chatMessageList;
@@ -124,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     public void onSendMessage(View view) {
         // キーボードを非表示にする
         closeKeyBoard(view);
-        if(userMessage.getText().toString().length() == 0) {
+        if (userMessage.getText().toString().length() == 0) {
             userMessage.setError("メッセージを入力してください");
             userMessage.requestFocus();
         } else {
@@ -174,10 +190,7 @@ public class MainActivity extends AppCompatActivity {
         user.setMessage(userMessage.getText().toString());
         realm.commitTransaction();
         System.out.println(user);
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessage(user.getMessage());
-        chatMessage.setIsBot(false);
-        chatMessage.setDate(user.getDate());
+        ChatMessage chatMessage = new ChatMessage(nextId, user.getMessage(), false, user.getDate(), false);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         return user;
@@ -188,16 +201,13 @@ public class MainActivity extends AppCompatActivity {
         realm.beginTransaction();
         Number maxId = realm.where(BotMessage.class).max("id");
         long nextId = 1;
-        if(maxId != null) nextId = maxId.longValue() + 1;
+        if (maxId != null) nextId = maxId.longValue() + 1;
         BotMessage bot = realm.createObject(BotMessage.class, nextId);
         bot.setUserMessage(userMessage);
         bot.setDate(date);
         bot.setMessage(botMessage);
         bot.setLike(false);
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessage(bot.getMessage());
-        chatMessage.setIsBot(true);
-        chatMessage.setDate(bot.getDate());
+        ChatMessage chatMessage = new ChatMessage(nextId, botMessage, true, bot.getDate(), false);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         realm.commitTransaction();
@@ -213,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * APIにリクエストを送る
+     *
      * @param userMessage
      */
     private void getBotMessage(final UserMessage userMessage) {
@@ -221,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue getQueue = Volley.newRequestQueue(this);
 
-        StringRequest sRequest = new StringRequest(Request.Method.GET, requestUrl+userMessage.getMessage(),
+        StringRequest sRequest = new StringRequest(Request.Method.GET, requestUrl + userMessage.getMessage(),
 
                 // 通信成功
                 new Response.Listener<String>() {
@@ -251,4 +262,36 @@ public class MainActivity extends AppCompatActivity {
         getQueue.add(sRequest);
     }
 
+    public void onClickLike(View view) {
+        long chatId = (long) view.getTag();
+        /*View tempView = (View) view.getTag(2);
+        ImageButton tempImageButton = (ImageButton) tempView.findViewById(R.id.likeButton);*/
+        ImageButton tempImageButton = (ImageButton) view.findViewById(R.id.likeButton);
+        System.out.println(chatId);
+        realm.beginTransaction();
+        BotMessage botMessage = realm.where(BotMessage.class).equalTo("id", chatId).findFirst();
+        botMessage.setLike(!botMessage.getLike());
+        realm.commitTransaction();
+        System.out.println(botMessage.getLike());
+        tempImageButton.setImageResource(botMessage.getLike()? R.drawable.heart : R.drawable.empty_heart);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onChangeChat(View view) {
+        String state = changeChat.getText().toString();
+        if(state == "All") {
+            chatMessages = getChatMessage(loginUserId, true);
+            changeChat.setText("Like");
+        } else {
+            chatMessages = getChatMessage(loginUserId, false);
+            changeChat.setText("All");
+        }
+        adapter = new ChatMessageAdapter(this, chatListView.getId(), chatMessages);
+        chatListView.setAdapter(adapter);
+        itemCount = chatListView.getCount();
+        // listViewを一番下にする
+        chatListView.setItemChecked(itemCount - 1, true);
+        chatListView.setSelection(itemCount - 1);
+        adapter.notifyDataSetChanged();
+    }
 }
