@@ -58,7 +58,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder = new ChatMessageAdapter.ViewHolder();
             viewHolder.message = (TextView) convertView.findViewById(R.id.chatMessage);
             viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            viewHolder.loveIcon = (ImageButton) convertView.findViewById(R.id.likeButton);
+            viewHolder.loveIcon = (ImageView) convertView.findViewById(R.id.likeButton);
         } else {
             viewHolder = (ChatMessageAdapter.ViewHolder) convertView.getTag();
         }
@@ -78,7 +78,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //viewHolder.loveIcon.setTag(1, convertView);
         viewHolder.loveIcon.setTag(chatMessage.getChatId());
         if(isbot) {
-            viewHolder.loveIcon.setImageResource(chatMessage.getLike()? R.drawable.heart : R.drawable.empty_heart);
+            viewHolder.loveIcon.setImageResource(chatMessage.getLike()? R.drawable.heart_pink: R.drawable.heart_white);
         } else {
             viewHolder.loveIcon.setVisibility(View.INVISIBLE);
         }
